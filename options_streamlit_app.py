@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Interactive Options Analysis App
-A Streamlit web application for analyzing ETF options with adjustable parameters.
+A Streamlit web application for analyzing Stock options with adjustable parameters.
 """
 
 import streamlit as st
@@ -17,6 +17,13 @@ import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
 import warnings
+from options_strategy_comparison import (
+    get_option_strategy_payoff,
+    create_strategy_comparison_chart,
+    create_strategy_metrics_table,
+    find_optimal_strategy_for_outlook,
+    get_strategy_descriptions
+)
 
 # Suppress warnings
 warnings.filterwarnings('ignore')
@@ -53,17 +60,79 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # App title
-st.markdown("<h1 class='main-header'>ETF Options Analysis Tool</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='main-header'>Stock Options Analysis Tool</h1>", unsafe_allow_html=True)
 
 # Sidebar for inputs
 st.sidebar.markdown("<h2 class='sub-header'>Parameters</h2>", unsafe_allow_html=True)
 
 # Ticker selection
 default_ticker = "IBIT"
-ticker = st.sidebar.text_input("ETF Ticker Symbol", value=default_ticker).upper()
+ticker = st.sidebar.text_input("Stock Ticker Symbol", value=default_ticker).upper()
 
 # Load data button
-load_data = st.sidebar.button("Load ETF Data")
+load_data = st.sidebar.button("Load Stock Data")
+
+# Add iframe under the Load Stock Data button
+st.sidebar.markdown("""
+<iframe
+ src="https://udify.app/chatbot/9bIwPze39OWUkTkp"
+ style="width: 100%; height: 100%; min-height: 700px"
+ frameborder="0"
+ allow="microphone">
+</iframe>
+
+## Stock Options Analysis Tool
+
+A comprehensive Python-based toolkit for analyzing stock options and visualizing potential profit/loss scenarios. This project includes both a command-line script and an interactive web application built with Streamlit.
+
+### Overview
+
+This toolkit provides investors with powerful options analysis capabilities:
+
+- **Single Option Analysis**: Analyze individual call and put options with customizable parameters
+- **Strategy Comparison**: Compare different options strategies (Long Call, Covered Call, Bull Call Spread, etc.)
+- **Interactive Visualizations**: View payoff diagrams, ROI charts, and profit/loss projections
+- **Real-time Data**: Fetch current stock prices and options chains using yfinance
+
+### Components
+
+#### 1. Command-Line Script (`ibit_option_analysis.py`)
+
+A Python script for quick options analysis from the terminal.
+
+**Features:**
+- Fetches current stock price using yfinance
+- Identifies option expiration dates closest to 90 and 180 days from today
+- Filters call options with strike prices within ±5% of current price
+- Calculates potential profit/loss assuming a 10% price increase by expiry
+
+#### 2. Streamlit Web Application (`options_streamlit_app.py`)
+
+An interactive web application with a user-friendly interface for in-depth options analysis.
+
+**Features:**
+- Interactive UI with adjustable parameters
+- Real-time data fetching for any stock ticker
+- Multiple visualization types (payoff diagrams, ROI charts, etc.)
+- Advanced options strategy comparison
+
+#### 3. Strategy Comparison Module
+
+Supported Strategies:
+- Long Call
+- Covered Call
+- Bull Call Spread
+- Protective Put
+- Iron Condor
+
+### Usage Examples
+
+```bash
+python3 ibit_option_analysis.py         # Analyzes IBIT options
+python3 ibit_option_analysis.py SPY     # Analyzes SPY options
+streamlit run options_streamlit_app.py  # Launch web app
+```
+""", unsafe_allow_html=True)
 
 # Global variables for data storage
 current_price = None
@@ -263,7 +332,7 @@ if load_data or 'data_loaded' in st.session_state:
         if expiry_dates:
             # Allow user to adjust the current price
             adjusted_price = st.slider(
-                "Adjust underlying ETF price for analysis:",
+                "Adjust underlying Stock price for analysis:",
                 min_value=current_price * 0.7,
                 max_value=current_price * 1.3,
                 value=current_price,
@@ -398,18 +467,18 @@ if load_data or 'data_loaded' in st.session_state:
         else:
             st.error(f"No options data available for {ticker}")
 else:
-    st.info("Enter a ticker symbol and click 'Load ETF Data' to begin analysis.")
+    st.info("Enter a ticker symbol and click 'Load Stock Data' to begin analysis.")
     
     # Example section
     st.markdown("<h3 class='sub-header'>Example Tickers with Options</h3>", unsafe_allow_html=True)
     st.markdown("""
-    <p class='info-text'>Try these popular ETFs:</p>
+    <p class='info-text'>Try these popular Stocks:</p>
     <ul>
-        <li>IBIT - BlackRock Bitcoin ETF</li>
-        <li>SPY - SPDR S&P 500 ETF</li>
+        <li>IBIT - BlackRock Bitcoin Stock</li>
+        <li>SPY - SPDR S&P 500 Stock</li>
         <li>QQQ - Invesco QQQ Trust (Nasdaq-100)</li>
-        <li>IWM - iShares Russell 2000 ETF</li>
-        <li>EEM - iShares MSCI Emerging Markets ETF</li>
+        <li>IWM - iShares Russell 2000 Stock</li>
+        <li>EEM - iShares MSCI Emerging Markets Stock</li>
     </ul>
     """, unsafe_allow_html=True)
 

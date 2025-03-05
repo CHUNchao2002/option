@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Options Analysis Script with Visualization
-This script analyzes ETF options, focusing on call options within ±5% of current price
+This script analyzes Stock options, focusing on call options within ±5% of current price
 and calculates potential profit/loss for a 10% price increase scenario.
 """
 

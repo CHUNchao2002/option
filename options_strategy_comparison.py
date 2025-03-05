@@ -3,7 +3,7 @@
 """
 Options Strategy Comparison Module
 This module provides functionality to compare different options strategies
-for ETF analysis in the Streamlit application.
+for Stock analysis in the Streamlit application.
 """
 
 import pandas as pd
@@ -23,7 +23,7 @@ def get_option_strategy_payoff(strategy_type, options_data, current_price, price
     options_data : dict
         Dictionary containing the selected options data for the strategy
     current_price : float
-        Current price of the underlying ETF
+        Current price of the underlying Stock
     price_points : array
         Array of price points to calculate the payoff at
     
@@ -54,7 +54,7 @@ def get_option_strategy_payoff(strategy_type, options_data, current_price, price
         strategy_description = f"Long Call: Buy {call_option['contractSymbol']} at strike ${strike:.2f} for ${premium:.2f}"
     
     elif strategy_type == "covered_call":
-        # Covered Call: Own the stock and sell a call option
+        # Covered Call: Own the Stock and sell a call option
         call_option = options_data.get('call', None)
         if call_option is None:
             return None
@@ -68,7 +68,7 @@ def get_option_strategy_payoff(strategy_type, options_data, current_price, price
             payoff = min(price - current_price + premium, strike - current_price + premium)
             payoffs.append(payoff)
             
-        strategy_description = f"Covered Call: Buy ETF at ${current_price:.2f} and sell {call_option['contractSymbol']} at strike ${strike:.2f} for ${premium:.2f}"
+        strategy_description = f"Covered Call: Buy Stock at ${current_price:.2f} and sell {call_option['contractSymbol']} at strike ${strike:.2f} for ${premium:.2f}"
     
     elif strategy_type == "bull_call_spread":
         # Bull Call Spread: Buy a call option and sell a higher strike call option
@@ -94,7 +94,7 @@ def get_option_strategy_payoff(strategy_type, options_data, current_price, price
         strategy_description = f"Bull Call Spread: Buy {lower_call['contractSymbol']} at strike ${lower_strike:.2f} for ${lower_premium:.2f} and sell {higher_call['contractSymbol']} at strike ${higher_strike:.2f} for ${higher_premium:.2f}"
     
     elif strategy_type == "protective_put":
-        # Protective Put: Own the stock and buy a put option
+        # Protective Put: Own the Stock and buy a put option
         put_option = options_data.get('put', None)
         if put_option is None:
             return None
@@ -110,7 +110,7 @@ def get_option_strategy_payoff(strategy_type, options_data, current_price, price
             payoff = stock_payoff + put_payoff
             payoffs.append(payoff)
             
-        strategy_description = f"Protective Put: Buy ETF at ${current_price:.2f} and buy {put_option['contractSymbol']} at strike ${strike:.2f} for ${premium:.2f}"
+        strategy_description = f"Protective Put: Buy Stock at ${current_price:.2f} and buy {put_option['contractSymbol']} at strike ${strike:.2f} for ${premium:.2f}"
     
     elif strategy_type == "iron_condor":
         # Iron Condor: Sell a put spread and a call spread
@@ -168,7 +168,7 @@ def create_strategy_comparison_chart(strategies_data, price_points, current_pric
     price_points : array
         Array of price points used for the x-axis
     current_price : float
-        Current price of the underlying ETF
+        Current price of the underlying Stock
     
     Returns:
     --------
@@ -212,7 +212,7 @@ def create_strategy_comparison_chart(strategies_data, price_points, current_pric
     # Update layout
     fig.update_layout(
         title='Options Strategy Comparison',
-        xaxis_title='ETF Price at Expiry ($)',
+        xaxis_title='Stock Price at Expiry ($)',
         yaxis_title='Profit/Loss ($)',
         legend_title='Strategies',
         hovermode='x unified',
@@ -232,7 +232,7 @@ def create_strategy_metrics_table(strategies_data, price_points, current_price):
     price_points : array
         Array of price points used for the x-axis
     current_price : float
-        Current price of the underlying ETF
+        Current price of the underlying Stock
     
     Returns:
     --------
@@ -361,37 +361,37 @@ def get_strategy_descriptions():
     return {
         'long_call': {
             'name': 'Long Call',
-            'description': 'Buying a call option gives you the right to purchase the ETF at the strike price. This strategy is used when you expect the ETF price to rise significantly.',
+            'description': 'Buying a call option gives you the right to purchase the Stock at the strike price. This strategy is used when you expect the Stock price to rise significantly.',
             'risk_profile': 'Limited risk (premium paid), unlimited potential profit',
             'best_for': 'Bullish outlook with significant upside potential',
-            'example': 'Buy a call option with strike price $100 for a premium of $5. Break-even at $105. Profit increases as the ETF price rises above $105.'
+            'example': 'Buy a call option with strike price $100 for a premium of $5. Break-even at $105. Profit increases as the Stock price rises above $105.'
         },
         'covered_call': {
             'name': 'Covered Call',
-            'description': 'Owning the ETF and selling a call option against it. This strategy generates income from the premium while limiting potential upside.',
-            'risk_profile': 'Downside risk of owning the ETF, limited upside potential',
+            'description': 'Owning the Stock and selling a call option against it. This strategy generates income from the premium while limiting potential upside.',
+            'risk_profile': 'Downside risk of owning the Stock, limited upside potential',
             'best_for': 'Slightly bullish or neutral outlook, income generation',
-            'example': 'Own the ETF at $100 and sell a call with strike price $105 for $3. Keep the premium regardless of outcome, but must sell at $105 if the ETF price exceeds that level.'
+            'example': 'Own the Stock at $100 and sell a call with strike price $105 for $3. Keep the premium regardless of outcome, but must sell at $105 if the Stock price exceeds that level.'
         },
         'bull_call_spread': {
             'name': 'Bull Call Spread',
             'description': 'Buying a call option at a lower strike price and selling a call at a higher strike price. This reduces the cost but caps the maximum profit.',
             'risk_profile': 'Limited risk (net premium paid), limited potential profit',
             'best_for': 'Moderately bullish outlook with defined risk/reward',
-            'example': 'Buy a call with strike $100 for $5 and sell a call with strike $110 for $2. Net cost is $3, max profit is $7 if ETF price exceeds $110.'
+            'example': 'Buy a call with strike $100 for $5 and sell a call with strike $110 for $2. Net cost is $3, max profit is $7 if Stock price exceeds $110.'
         },
         'protective_put': {
             'name': 'Protective Put',
-            'description': 'Owning the ETF and buying a put option as insurance. This strategy protects against significant downside while maintaining upside potential.',
+            'description': 'Owning the Stock and buying a put option as insurance. This strategy protects against significant downside while maintaining upside potential.',
             'risk_profile': 'Limited downside risk, unlimited upside potential, but higher cost',
             'best_for': 'Bullish with concern about potential downside risks',
-            'example': 'Own the ETF at $100 and buy a put with strike $95 for $3. Maximum loss limited to $8 ($5 from ETF decline + $3 premium), unlimited upside.'
+            'example': 'Own the Stock at $100 and buy a put with strike $95 for $3. Maximum loss limited to $8 ($5 from Stock decline + $3 premium), unlimited upside.'
         },
         'iron_condor': {
             'name': 'Iron Condor',
-            'description': 'Selling an out-of-the-money put spread and an out-of-the-money call spread. This strategy profits when the ETF price stays within a range.',
+            'description': 'Selling an out-of-the-money put spread and an out-of-the-money call spread. This strategy profits when the Stock price stays within a range.',
             'risk_profile': 'Limited risk, limited potential profit',
             'best_for': 'Neutral outlook, expecting low volatility',
-            'example': 'Sell a put spread (buy $90 put, sell $95 put) and sell a call spread (sell $105 call, buy $110 call). Profit when ETF price stays between $95 and $105.'
+            'example': 'Sell a put spread (buy $90 put, sell $95 put) and sell a call spread (sell $105 call, buy $110 call). Profit when Stock price stays between $95 and $105.'
         }
     }
