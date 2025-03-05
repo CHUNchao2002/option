@@ -1,9 +1,9 @@
 yfinance>=0.2.31
 pandas>=2.0.0
+numpy>=1.24.0
 matplotlib>=3.7.0
 mplfinance
 seaborn 
 plotly
-streamlit
-numpy>=1.24.0
+streamlit>=1.32.0
 optopsy
